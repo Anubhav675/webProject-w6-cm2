@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
-
+// import Signup from '../pages/Signup';
 const Navbar = () => {
   const linkClass = ({ isActive }) =>
     isActive
@@ -28,6 +28,12 @@ const Navbar = () => {
                 </NavLink>
                 <NavLink to='/add-job' className={linkClass}>
                   Add Job
+                </NavLink>
+                <NavLink to='/users/signup' className={linkClass}>
+                Signup
+                </NavLink>
+                 <NavLink to='/users/login' className={linkClass}>
+                Login
                 </NavLink>
               </div>
             </div>

@@ -3,9 +3,9 @@
     {
       "id": "1",
       "title": "Senior React Developer",
-      "type": "Full-Time",
-      "description": "We are seeking a talented Front-End Developer to join our team in Boston, MA. The ideal candidate will have strong skills in HTML, CSS, and JavaScript, with experience working with modern JavaScript frameworks such as React or Angular.",
+      "type": "Internship",
       "location": "Boston, MA",
+      "description": "We are seeking a talented Front-End Developer to join our team in Boston, MA. The ideal candidate will have strong skills in HTML, CSS, and JavaScript, with experience working with modern JavaScript frameworks such as React or Angular.",
       "salary": "$70K - $80K",
       "company": {
         "name": "NewTek Solutions",
@@ -57,20 +57,6 @@
       }
     },
     {
-      "id": "5",
-      "title": "Full Stack React Developer",
-      "type": "Full-Time",
-      "description": "Exciting opportunity for a Full-Time Front-End Developer in bustling Atlanta, GA. We are seeking a talented individual with a passion for building elegant and scalable web applications. Join our team and make an impact!",
-      "location": "Atlanta, GA",
-      "salary": "$90K - $100K",
-      "company": {
-        "name": "Browning Technologies",
-        "description": "Browning Technologies is a rapidly growing technology company specializing in e-commerce solutions. We offer a dynamic and collaborative work environment where employees are encouraged to think creatively and innovate.",
-        "contactEmail": "contact@consecteturadipisicing.com",
-        "contactPhone": "555-555-5555"
-      }
-    },
-    {
       "id": "6",
       "title": "React Native Developer",
       "type": "Full-Time",
@@ -83,6 +69,20 @@
         "contactEmail": "contact@ipsumlorem.com",
         "contactPhone": "555-555-5555"
       }
+    },
+    {
+      "title": "test",
+      "type": "Full-Time",
+      "location": "test",
+      "description": "test",
+      "salary": "Under $50K",
+      "company": {
+        "name": "test",
+        "description": "test",
+        "contactEmail": "test@test.com",
+        "contactPhone": "58745874587"
+      },
+      "id": "_GR-IGNUWsU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
