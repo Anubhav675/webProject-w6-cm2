@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
-const User = require("../models/userModel");
-const getAllUsers = async(req, res) => {
+const Job = require("../models/jobModel");
+const getAllJobs = async(req, res) => {
     try {
-        const user = await User.find({}).sort({createdAt: -1});
-        res.status(200).json(user);
+        const jobs = await Job.find({}).sort({createdAt: -1});
+        res.status(200).json(jobs);
     } catch(error) {
-        res.status(500).json({message: "Failed to retrive user"});
+        res.status(500).json({message: "Failed to retrive jobs"});
     }
 };
-const getUser = async(req, res) => {
+const getJob = async(req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({message: "user not found"});
+        const job = await Job.findById(req.params.id);
+        if (!job) {
+            return res.status(404).json({message: "Job not found"});
         }
         res.status(200).json();
     }catch(error){
@@ -20,9 +20,9 @@ const getUser = async(req, res) => {
     }
 };
 
-const createUser = async(req, res) =>{
+const createJob = async(req, res) =>{
     try {
-        const newJob = await User.create({ ...req.body});
+        const newJob = await Job.create({ ...req.body});
         res.status(201).json(newJob);
     } catch (error) {
         res.status(404).json({message: "Failed to create job--", error:error.message});
@@ -30,15 +30,15 @@ const createUser = async(req, res) =>{
 
 
 };
-const updateUser = async(req, res) => {
+const updateJob = async(req, res) => {
     const {job} = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(userId)){
+    if(!mongoose.Types.ObjectId.isValid(jobId)){
         return res.status(400).json({message: "Invalid job ID"});
     }
     try {
-        const updatedJob = await User.findOneAndUpdate(
-            { _id: userId },
+        const updatedJob = await Job.findOneAndUpdate(
+            { _id: jobId },
             { ...req.body },
             { new: true }
     );
@@ -52,15 +52,15 @@ const updateUser = async(req, res) => {
   }
 };
 
-const deleteUser = async(req, res) => {
+const deleteJob = async(req, res) => {
     const {job} = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(jobId)){
         return res.status(400).json({message: "Invalid job ID"});
     }
     try {
-        const deletedJob = await User.findOneAndDelete({_id: job});
-        if(deletedJob) {
+        const deletedJob = await Job.findOneAndDelete({_id: job});
+        if(deleteJob) {
             res.status(204).send();
         } else {
             res.status(404).json({message: "Job not found"});
@@ -71,9 +71,9 @@ const deleteUser = async(req, res) => {
 
 };
 module.exports = {
-    getAllUsers,
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser
+    getAllJobs,
+    getJob,
+    createJob,
+    updateJob,
+    deleteJob
 };
