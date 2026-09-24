@@ -1,79 +1,106 @@
-const mongoose = require("mongoose");
 const User = require("../models/userModel");
-const getAllUsers = async(req, res) => {
-    try {
-        const user = await User.find({}).sort({createdAt: -1});
-        res.status(200).json(user);
-    } catch(error) {
-        res.status(500).json({message: "Failed to retrive user"});
-    }
-};
-const getUser = async(req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({message: "user not found"});
-        }
-        res.status(200).json();
-    }catch(error){
-        res.status(500).json({message: "Get Job Failed", error: err.message})
-    }
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
+// Generate JWT
+const generateToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET, {
+    expiresIn: "3d",
+  });
 };
 
-const createUser = async(req, res) =>{
-    try {
-        const newJob = await User.create({ ...req.body});
-        res.status(201).json(newJob);
-    } catch (error) {
-        res.status(404).json({message: "Failed to create job--", error:error.message});
-    };
-
-
-};
-const updateUser = async(req, res) => {
-    const {job} = req.params;
-
-    if(!mongoose.Types.ObjectId.isValid(userId)){
-        return res.status(400).json({message: "Invalid job ID"});
+// @desc    Register new user
+// @route   POST /api/users/signup
+// @access  Public
+const signupUser = async (req, res) => {
+  const {
+    name,
+    email,
+    password,
+    phone_number,
+    gender,
+    date_of_birth,
+    membership_status,
+  } = req.body;
+  try {
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !phone_number ||
+      !gender ||
+      !date_of_birth ||
+      !membership_status
+    ) {
+      res.status(400);
+      throw new Error("Please add all fields");
     }
-    try {
-        const updatedJob = await User.findOneAndUpdate(
-            { _id: userId },
-            { ...req.body },
-            { new: true }
-    );
-     if (updatedJob) {
-      res.status(200).json(updatedJob);
+    // Check if user exists
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      res.status(400);
+      throw new Error("User already exists");
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      phone_number,
+      gender,
+      date_of_birth,
+      membership_status,
+    });
+
+    if (user) {
+      const token = generateToken(user._id);
+      res.status(201).json({ email, token });
     } else {
-      res.status(404).json({ message: "Job not found" });
+      res.status(400);
+      throw new Error("Invalid user data");
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to update job" });
+    res.status(400).json({ error: error.message });
   }
 };
 
-const deleteUser = async(req, res) => {
-    const {job} = req.params;
+// @desc    Authenticate a user
+// @route   POST /api/users/login
+// @access  Public
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    // Check for user email
+    const user = await User.findOne({ email });
 
-    if(!mongoose.Types.ObjectId.isValid(jobId)){
-        return res.status(400).json({message: "Invalid job ID"});
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = generateToken(user._id);
+      res.status(200).json({ email, token });
+    } else {
+      res.status(400);
+      throw new Error("Invalid credentials");
     }
-    try {
-        const deletedJob = await User.findOneAndDelete({_id: job});
-        if(deletedJob) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({message: "Job not found"});
-        }
-    } catch (error){
-        res.status(500).json({message: "Failed to delete job"});
-    }
-
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
+
+const getMe = async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
-    getAllUsers,
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser
+  signupUser,
+  loginUser,
+  getMe,
 };
