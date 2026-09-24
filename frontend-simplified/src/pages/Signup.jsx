@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { useState } from "react";
 const Signup = () => {
   const [name, setName] = useState("");
@@ -35,15 +35,16 @@ const Signup = () => {
     console.log("Here");
     console.log(JSON.stringify(item));
 
-    const res = await fetch(`/api/users/signup`, {
+    const res = await fetch("api/users/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(item),
     });
+    console.log("zzzzzzzzz");
     const user = await res.json();
-    console.log(user);
+    // console.log(user);
   };
   return (
     <div>
