@@ -1,20 +1,23 @@
 // import React from "react";
 import { useState } from "react";
-const Signup = () => {
+import { Link, useNavigate } from "react-router-dom";
+const Signup = ({ setIsAuthenticated }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gender, setGender] = useState("");
   const [doB, setDoB] = useState("");
-  const[street, setStreet] = useState('');
-  const[city, setCity] = useState('');
-  const[zipCode, setZipCode] = useState('');
-  
-  
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
     const newSignup = {
       name,
       email,
@@ -32,19 +35,25 @@ const Signup = () => {
   };
 
   const updateSignup = async (item) => {
-    console.log("Here");
     console.log(JSON.stringify(item));
 
-    const res = await fetch("api/users/signup", {
+    const res = await fetch("/api/users/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(item),
     });
-    console.log("zzzzzzzzz");
     const user = await res.json();
     // console.log(user);
+    if (!res.ok) {
+      setError(user.error);
+      return;
+    }
+
+    localStorage.setItem("user", JSON.stringify(user));
+    setIsAuthenticated(true);
+    navigate("/");
   };
   return (
     <div>
@@ -86,27 +95,28 @@ const Signup = () => {
           onChange={(e) => setDoB(e.target.value)}
         />
         <label>
-            Address
-            <input
-          type="text"
-          value={street}
-          placeholder="Street"
-          onChange={(e) => setStreet(e.target.value)}
-        />
-        <input
-          type="text"
-          value={city}
-          placeholder="City"
-          onChange={(e) => setCity(e.target.value)}
-        />
+          Address
           <input
-          type="number"
-          value={zipCode}
-          placeholder="Zip-Code"
-          onChange={(e) => setZipCode(e.target.value)}
-        />
-            </label>
-        <button className="button">Signup</button>
+            type="text"
+            value={street}
+            placeholder="Street"
+            onChange={(e) => setStreet(e.target.value)}
+          />
+          <input
+            type="text"
+            value={city}
+            placeholder="City"
+            onChange={(e) => setCity(e.target.value)}
+          />
+          <input
+            type="number"
+            value={zipCode}
+            placeholder="Zip-Code"
+            onChange={(e) => setZipCode(e.target.value)}
+          />
+        </label>
+        <button>Signup</button>
+        {error && <p>{error}</p>}
       </form>
     </div>
   );

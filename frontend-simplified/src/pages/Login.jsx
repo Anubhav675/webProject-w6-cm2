@@ -1,35 +1,42 @@
 import React from "react";
 import { useState } from "react";
-const Login = () => {
+import { useNavigate } from "react-router-dom";
 
+const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState('');
-  
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const newLogin ={
-       
-        email,
-        password
-    }
-    updateLogin(newLogin);
+    setError(null);
 
+    const newLogin = {
+      email,
+      password,
+    };
+    updateLogin(newLogin);
   };
 
-  const updateLogin = async(item)=> {
-    console.log("Here");
-    console.log(JSON.stringify(item));
-
+  const updateLogin = async (item) => {
     const res = await fetch(`/api/users/login`, {
-        method : "POST",
-        headers:{
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(item),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(item),
     });
     const user = await res.json();
-    console.log(user);
-  }
+    if (!res.ok) {
+      setError(user.error);
+      return;
+    }
+
+    localStorage.setItem("user", JSON.stringify(user));
+    setIsAuthenticated(true);
+    navigate("/");
+  };
   return (
     <div>
       <form onSubmit={handleFormSubmit}>
@@ -45,7 +52,8 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      <button className='button'>Login</button>
+        <button className="button">Login</button>
+        {error && <p>{error}</p>}
       </form>
     </div>
   );
