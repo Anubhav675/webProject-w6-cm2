@@ -14,7 +14,8 @@ const AddJobPage = () => {
   const [contactPhone, setContactPhone] = useState("");
 
   const navigate = useNavigate();
-
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = user ? user.token : null;
   // Add New Job
   // const addJob = async (newJob) => {
   //   const res = await fetch("/api/jobs", {
@@ -33,6 +34,7 @@ const AddJobPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(newJob),
       });

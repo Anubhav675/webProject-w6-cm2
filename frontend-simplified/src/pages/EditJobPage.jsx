@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const EditJobPage = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = user ? user.token : null;
   const [job, setJob] = useState(null); // Initialize job state
   const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ const EditJobPage = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(job),
       });

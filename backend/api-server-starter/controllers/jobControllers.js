@@ -19,7 +19,7 @@ const {jobId} = req.params;
         res.status(200).json(job);
         }
     }catch(error){
-        res.status(500).json({message: "Get Job Failed", error: err.message})
+        res.status(500).json({message: "Get Job Failed", error: error.message})
     }
 };
 

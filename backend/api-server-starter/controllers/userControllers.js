@@ -20,7 +20,11 @@ const signupUser = async (req, res) => {
     phone_number,
     gender,
     date_of_birth,
-    membership_status,
+    address: {
+        street,
+        city,
+        zipCode
+    }
   } = req.body;
   try {
     if (
@@ -30,7 +34,9 @@ const signupUser = async (req, res) => {
       !phone_number ||
       !gender ||
       !date_of_birth ||
-      !membership_status
+      !street ||
+      !city ||
+      !zipCode
     ) {
       res.status(400);
       throw new Error("Please add all fields");
@@ -55,7 +61,11 @@ const signupUser = async (req, res) => {
       phone_number,
       gender,
       date_of_birth,
-      membership_status,
+      address: {
+        street,
+        city,
+        zipCode
+      }
     });
 
     if (user) {
@@ -75,6 +85,7 @@ const signupUser = async (req, res) => {
 // @access  Public
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password);
   try {
     // Check for user email
     const user = await User.findOne({ email });
